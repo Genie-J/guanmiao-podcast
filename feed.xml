@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+     xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+     xmlns:content="http://purl.org/rss/1.0/modules/content/"
+     xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>观妙 · 道德经冥想</title>
+    <link>https://genie-j.github.io/guanmiao-podcast/</link>
+    <atom:link href="https://genie-j.github.io/guanmiao-podcast/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>每日一章,在道德经的意境中静坐十五分钟。常无,欲以观其妙;常有,欲以观其徼。</description>
+    <language>zh-cn</language>
+    <copyright>© 2026 观妙</copyright>
+    <itunes:author>观妙</itunes:author>
+    <itunes:owner>
+      <itunes:name>观妙</itunes:name>
+      <itunes:email>guanmiao@private.local</itunes:email>
+    </itunes:owner>
+    <itunes:image href="https://genie-j.github.io/guanmiao-podcast/cover.png"/>
+    <image>
+      <url>https://genie-j.github.io/guanmiao-podcast/cover.png</url>
+      <title>观妙 · 道德经冥想</title>
+      <link>https://genie-j.github.io/guanmiao-podcast/</link>
+    </image>
+    <itunes:category text="Health &amp; Fitness">
+      <itunes:category text="Mental Health"/>
+    </itunes:category>
+    <itunes:category text="Religion &amp; Spirituality">
+      <itunes:category text="Spirituality"/>
+    </itunes:category>
+    <itunes:explicit>false</itunes:explicit>
+    <itunes:type>episodic</itunes:type>
+
+    <item>
+      <title>第一章 · 道可道</title>
+      <description>道可道,非常道。名可名,非常名。无名天地之始;有名万物之母。故常无,欲以观其妙;常有,欲以观其徼。此两者,同出而异名,同谓之玄。玄之又玄,众妙之门。</description>
+      <itunes:summary>道可道,非常道。名可名,非常名。无名天地之始;有名万物之母。故常无,欲以观其妙;常有,欲以观其徼。此两者,同出而异名,同谓之玄。玄之又玄,众妙之门。</itunes:summary>
+      <pubDate>Thu, 08 May 2026 22:00:00 +0800</pubDate>
+      <enclosure url="https://genie-j.github.io/guanmiao-podcast/episode-01.mp3" length="22083334" type="audio/mpeg"/>
+      <guid isPermaLink="false">guanmiao-ch01-2026</guid>
+      <itunes:duration>15:20</itunes:duration>
+      <itunes:episode>1</itunes:episode>
+      <itunes:image href="https://genie-j.github.io/guanmiao-podcast/cover.png"/>
+      <itunes:explicit>false</itunes:explicit>
+    </item>
+  </channel>
+</rss>
