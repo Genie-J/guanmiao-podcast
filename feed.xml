@@ -13,14 +13,9 @@
     <itunes:author>观妙</itunes:author>
     <itunes:owner>
       <itunes:name>观妙</itunes:name>
-      <itunes:email>guanmiao@private.local</itunes:email>
+      <itunes:email>kangjayden66@gmail.com</itunes:email>
     </itunes:owner>
     <itunes:image href="https://genie-j.github.io/guanmiao-podcast/cover.png"/>
-    <image>
-      <url>https://genie-j.github.io/guanmiao-podcast/cover.png</url>
-      <title>观妙 · 道德经冥想</title>
-      <link>https://genie-j.github.io/guanmiao-podcast/</link>
-    </image>
     <itunes:category text="Health &amp; Fitness">
       <itunes:category text="Mental Health"/>
     </itunes:category>
