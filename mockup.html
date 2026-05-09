@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>观妙 · mockup</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1612">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+  html,body{margin:0;padding:0;background:#1a1612;color:#d4c4a8;
+            font-family:-apple-system,"PingFang SC",sans-serif;
+            line-height:1.7;min-height:100vh;overflow-x:hidden}
+  body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+
+  /* dev 切换条 */
+  .dev{position:fixed;top:env(safe-area-inset-top);left:0;right:0;z-index:99;
+       background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);padding:6px 8px;
+       display:flex;gap:6px;justify-content:center;flex-wrap:wrap;font-size:11px}
+  .dev button{background:#2a2520;color:#8a7e6e;border:1px solid #3a3530;
+              padding:4px 10px;border-radius:4px;font-size:11px;font-family:inherit}
+  .dev button.on{background:#d4c4a8;color:#1a1612;border-color:#d4c4a8}
+  .dev .label{color:#5a4e3e;font-size:10px;align-self:center;margin-right:4px}
+
+  .view{display:none;min-height:100vh;flex-direction:column}
+  .view.active{display:flex}
+
+  /* 启动画面 */
+  #splash{align-items:center;justify-content:center;text-align:center;
+          animation:splashFade 1.5s ease-in-out forwards}
+  #splash h1{font-size:80px;font-weight:200;letter-spacing:24px;margin:0;
+             padding-left:24px;color:#d4c4a8;font-family:"Songti SC",serif;
+             opacity:0;animation:textIn 1.2s 0.2s ease-out forwards}
+  @keyframes textIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes splashFade{0%,80%{opacity:1}100%{opacity:0}}
+
+  /* 主页 */
+  #home{padding:60px 24px 80px;align-items:center}
+  .top-meta{color:#5a4e3e;font-size:12px;letter-spacing:4px;margin-bottom:8px}
+  .today-tag{color:#8a7e6e;font-size:13px;letter-spacing:6px;margin-bottom:32px}
+  .ch-card{background:transparent;width:100%;max-width:520px;padding:0;text-align:center}
+  .ch-num{color:#8a7e6e;font-size:13px;letter-spacing:8px;margin-bottom:12px}
+  .ch-title{font-size:42px;font-weight:300;letter-spacing:14px;margin:0 0 40px;
+            color:#e8d8b8;padding-left:14px;font-family:"Songti SC",serif}
+  .ch-text{color:#a89e8e;font-size:16px;line-height:2.2;margin:0 0 56px;
+           font-family:"Songti SC",serif;letter-spacing:2px}
+  .play-btn{width:96px;height:96px;border-radius:50%;background:transparent;
+            border:1px solid #6a5e4e;color:#d4c4a8;font-size:32px;
+            display:flex;align-items:center;justify-content:center;
+            margin:0 auto 16px;cursor:pointer;transition:all 0.3s}
+  .play-btn:active{background:#2a2520;transform:scale(0.96)}
+  .play-btn .triangle{margin-left:6px}
+  .duration{color:#6a5e4e;font-size:12px;letter-spacing:4px;margin-top:12px}
+  .more-link{position:fixed;bottom:48px;right:32px;color:#5a4e3e;
+             background:transparent;border:none;font-size:24px;cursor:pointer;
+             letter-spacing:4px;padding:12px}
+
+  /* 播放中 */
+  #playing{padding:80px 24px;align-items:center;justify-content:flex-start}
+  #playing .ch-num{font-size:13px;letter-spacing:8px;color:#6a5e4e;margin-bottom:16px}
+  #playing .ch-title{font-size:36px;letter-spacing:12px;color:#a89e8e;
+                     padding-left:12px;margin:0 0 80px;
+                     font-family:"Songti SC",serif;font-weight:300}
+  .playing-text{color:#5a4e3e;font-size:14px;line-height:2.4;text-align:center;
+                font-family:"Songti SC",serif;letter-spacing:2px;
+                opacity:0.4;max-width:480px}
+  .playing-controls{position:fixed;bottom:80px;left:0;right:0;
+                    display:flex;justify-content:center;gap:48px}
+  .ctrl-btn{width:64px;height:64px;border-radius:50%;background:transparent;
+            border:1px solid #6a5e4e;color:#d4c4a8;font-size:22px;
+            display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .ctrl-btn:active{background:#2a2520}
+  .breathing{position:fixed;bottom:200px;left:50%;transform:translateX(-50%);
+             width:8px;height:8px;border-radius:50%;background:#6a5e4e;
+             animation:breathe 6s ease-in-out infinite}
+  @keyframes breathe{0%,100%{opacity:0.3;transform:translateX(-50%) scale(1)}
+                     50%{opacity:0.8;transform:translateX(-50%) scale(2.5)}}
+
+  /* 完成页 */
+  #done{padding:120px 32px;align-items:center;text-align:center}
+  .done-tag{color:#8a7e6e;font-size:14px;letter-spacing:8px;margin-bottom:48px}
+  .quote{color:#d4c4a8;font-size:24px;font-weight:300;line-height:2;
+         font-family:"Songti SC",serif;letter-spacing:6px;
+         max-width:480px;margin:0 0 16px}
+  .quote-from{color:#6a5e4e;font-size:13px;letter-spacing:4px;margin-bottom:80px}
+  .close-btn{background:transparent;border:1px solid #6a5e4e;color:#8a7e6e;
+             padding:14px 48px;border-radius:32px;font-size:14px;letter-spacing:4px;
+             cursor:pointer;font-family:inherit}
+  .close-btn:active{background:#2a2520}
+
+  /* 章节列表 */
+  #list{padding:60px 0 80px}
+  .list-header{padding:0 24px 32px;display:flex;align-items:center;justify-content:space-between}
+  .list-title{font-size:20px;font-weight:300;letter-spacing:8px;color:#d4c4a8;
+              padding-left:8px;margin:0;font-family:"Songti SC",serif}
+  .back-btn{background:transparent;border:none;color:#8a7e6e;font-size:14px;
+            padding:8px 12px;cursor:pointer;letter-spacing:2px}
+  .ch-item{display:flex;align-items:baseline;padding:18px 24px;
+           border-bottom:1px solid #2a2520;cursor:pointer}
+  .ch-item:active{background:#221d18}
+  .ch-item.current{background:#221d18}
+  .ch-item .num{color:#5a4e3e;font-size:13px;letter-spacing:2px;width:64px;flex-shrink:0;
+                font-family:"SF Mono",monospace}
+  .ch-item .name{color:#a89e8e;font-size:16px;letter-spacing:3px;
+                 font-family:"Songti SC",serif}
+  .ch-item.current .name{color:#e8d8b8}
+  .ch-item.current .num{color:#8a7e6e}
+
+  audio{display:none}
+</style>
+</head>
+<body>
+
+<div class="dev">
+  <span class="label">mockup 切换:</span>
+  <button onclick="show('splash')">启动</button>
+  <button onclick="show('home')" class="on">主页</button>
+  <button onclick="show('playing')">播放中</button>
+  <button onclick="show('done')">完成</button>
+  <button onclick="show('list')">章节</button>
+</div>
+
+<!-- 1. 启动画面 -->
+<div class="view" id="splash">
+  <h1>观  妙</h1>
+</div>
+
+<!-- 2. 主页(今日) -->
+<div class="view active" id="home">
+  <div style="height:60px"></div>
+  <div class="today-tag">今 日</div>
+  <div class="ch-card">
+    <div class="ch-num">第 一 章</div>
+    <div class="ch-title">道  可  道</div>
+    <div class="ch-text">
+      道可道,非常道。<br>
+      名可名,非常名。<br>
+      无名天地之始,<br>
+      有名万物之母。<br>
+      故常无,欲以观其妙;<br>
+      常有,欲以观其徼。
+    </div>
+    <button class="play-btn" onclick="goPlay()"><span class="triangle">▶</span></button>
+    <div class="duration">十 五 分 钟</div>
+  </div>
+  <button class="more-link" onclick="show('list')">···</button>
+</div>
+
+<!-- 3. 播放中 -->
+<div class="view" id="playing">
+  <div style="height:40px"></div>
+  <div class="ch-num">第 一 章</div>
+  <div class="ch-title">道  可  道</div>
+  <div class="playing-text">
+    道可道,非常道<br>
+    名可名,非常名<br>
+    无名天地之始
+  </div>
+  <div class="breathing"></div>
+  <div class="playing-controls">
+    <button class="ctrl-btn" onclick="goDone()" title="跳到完成(mockup 用)">⏭</button>
+    <button class="ctrl-btn" onclick="togglePlay()">⏸</button>
+    <button class="ctrl-btn" onclick="show('home');stopAudio()">×</button>
+  </div>
+</div>
+
+<!-- 4. 完成 -->
+<div class="view" id="done">
+  <div class="done-tag">今 日 完 成</div>
+  <div class="quote">
+    玄之又玄,<br>
+    众妙之门
+  </div>
+  <div class="quote-from">— 第 一 章</div>
+  <button class="close-btn" onclick="show('home');stopAudio()">关 闭</button>
+</div>
+
+<!-- 5. 章节列表 -->
+<div class="view" id="list">
+  <div class="list-header">
+    <h2 class="list-title">八 十 一 章</h2>
+    <button class="back-btn" onclick="show('home')">‹ 返回</button>
+  </div>
+  <div id="chapters"></div>
+</div>
+
+<audio id="audio" src="episode-01.mp3" preload="metadata"></audio>
+
+<script>
+const chapters = [
+  '道可道','天下皆知美之为美','不尚贤','道冲','天地不仁','谷神不死','天长地久','上善若水','持而盈之','载营魄抱一',
+  '三十辐共一毂','五色令人目盲','宠辱若惊','视之不见','古之善为道者','致虚极','太上','大道废','绝圣弃智','绝学无忧',
+  '孔德之容','曲则全','希言自然','企者不立','有物混成','重为轻根','善行无辙迹','知其雄','将欲取天下','以道佐人主',
+  '夫兵者','道常无名','知人者智','大道泛兮','执大象','将欲歙之','道常无为','上德不德','昔之得一者','反者道之动',
+  '上士闻道','道生一','天下之至柔','名与身孰亲','大成若缺','天下有道','不出户','为学日益','圣人无常心','出生入死',
+  '道生之','天下有始','使我介然有知','善建者不拔','含德之厚','知者不言','以正治国','其政闷闷','治人事天','治大国',
+  '大国者下流','道者万物之奥','为无为','其安易持','古之善为道','江海所以为百谷王','天下皆谓我道大','善为士者不武','用兵有言','吾言甚易知',
+  '知不知','民不畏威','勇于敢则杀','民不畏死','民之饥','人之生也柔弱','天之道','天下莫柔弱于水','和大怨','小国寡民','信言不美'
+];
+const today = 1;
+const html = chapters.map((name, i) => {
+  const num = i + 1;
+  const cls = num === today ? 'ch-item current' : 'ch-item';
+  return `<div class="${cls}" onclick="pickChapter(${num})">
+    <span class="num">${String(num).padStart(2,'0')}</span>
+    <span class="name">${name}</span>
+  </div>`;
+}).join('');
+document.getElementById('chapters').innerHTML = html;
+
+function show(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.dev button').forEach(b => b.classList.remove('on'));
+  const btn = Array.from(document.querySelectorAll('.dev button')).find(b => b.getAttribute('onclick')?.includes(`'${id}'`));
+  if (btn) btn.classList.add('on');
+  if (id === 'splash') {
+    setTimeout(() => show('home'), 1600);
+  }
+  window.scrollTo(0, 0);
+}
+function goPlay() {
+  show('playing');
+  const a = document.getElementById('audio');
+  a.play().catch(() => {});
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: '第一章 · 道可道', artist: '观妙', album: '道德经冥想',
+      artwork: [{ src: 'cover.png', sizes: '1400x1400' }]
+    });
+  }
+}
+function goDone() { show('done'); stopAudio(); }
+function stopAudio() { const a = document.getElementById('audio'); a.pause(); a.currentTime = 0; }
+function togglePlay() {
+  const a = document.getElementById('audio');
+  if (a.paused) a.play(); else a.pause();
+  event.target.textContent = a.paused ? '▶' : '⏸';
+}
+function pickChapter(n) {
+  alert(`(mockup) 选第 ${n} 章 · ${chapters[n-1]} → 替换今日`);
+  show('home');
+}
+document.getElementById('audio').addEventListener('ended', () => goDone());
+</script>
+</body>
+</html>
