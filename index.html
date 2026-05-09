@@ -113,7 +113,11 @@
     <div class="ch-num" id="home-num">第 一 章</div>
     <div class="ch-title" id="home-title">道  可  道</div>
     <div class="ch-text" id="home-text"></div>
-    <button class="play-btn" onclick="goPlay()"><span class="triangle">▶</span></button>
+    <button class="play-btn" onclick="goPlay()" aria-label="播放">
+      <svg width="28" height="32" viewBox="0 0 28 32" fill="none" stroke="none">
+        <path d="M4 2 L26 16 L4 30 Z" fill="#d4c4a8"/>
+      </svg>
+    </button>
     <div class="duration">十 五 分 钟</div>
   </div>
   <button class="more-link" onclick="show('list')">···</button>
@@ -127,8 +131,18 @@
   <div class="playing-text" id="play-text"></div>
   <div class="breathing"></div>
   <div class="playing-controls">
-    <button class="ctrl-btn" onclick="togglePlay()" id="play-toggle">⏸</button>
-    <button class="ctrl-btn" onclick="show('home');stopAudio()">×</button>
+    <button class="ctrl-btn" onclick="togglePlay()" id="play-toggle" aria-label="暂停或继续">
+      <svg id="toggle-icon" width="20" height="24" viewBox="0 0 20 24" fill="#d4c4a8">
+        <rect x="3" y="2" width="5" height="20" rx="1"/>
+        <rect x="12" y="2" width="5" height="20" rx="1"/>
+      </svg>
+    </button>
+    <button class="ctrl-btn" onclick="show('home');stopAudio()" aria-label="关闭">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#d4c4a8" stroke-width="2" stroke-linecap="round">
+        <line x1="4" y1="4" x2="16" y2="16"/>
+        <line x1="16" y1="4" x2="4" y2="16"/>
+      </svg>
+    </button>
   </div>
 </div>
 
@@ -285,8 +299,16 @@ function stopAudio() {
 }
 function togglePlay() {
   const a = document.getElementById('audio');
-  if (a.paused) { a.play(); document.getElementById('play-toggle').textContent = '⏸'; }
-  else { a.pause(); document.getElementById('play-toggle').textContent = '▶'; }
+  const icon = document.getElementById('toggle-icon');
+  if (a.paused) {
+    a.play();
+    // 暂停 icon (两根竖)
+    icon.innerHTML = '<rect x="3" y="2" width="5" height="20" rx="1"/><rect x="12" y="2" width="5" height="20" rx="1"/>';
+  } else {
+    a.pause();
+    // 播放 icon (三角)
+    icon.innerHTML = '<path d="M3 2 L18 12 L3 22 Z"/>';
+  }
 }
 function pickChapter(n) {
   state.todayCh = n;
