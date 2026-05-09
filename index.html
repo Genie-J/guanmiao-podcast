@@ -3,23 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <title>观妙 · 道德经冥想</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="观妙">
+<link rel="apple-touch-icon" href="/cover.png">
+<meta name="theme-color" content="#1a1612">
 <style>
-  body{margin:0;background:#1a1612;color:#d4c4a8;font-family:-apple-system,"PingFang SC",sans-serif;
-       display:flex;flex-direction:column;align-items:center;justify-content:center;
-       min-height:100vh;padding:40px 24px;text-align:center;line-height:1.7}
-  h1{font-size:48px;font-weight:300;letter-spacing:8px;margin:0 0 12px}
-  .sub{color:#8a7e6e;margin:0 0 40px;letter-spacing:2px}
-  .feed{background:#2a2520;padding:16px 24px;border-radius:8px;font-family:Menlo,monospace;
-        font-size:13px;color:#d4c4a8;word-break:break-all;max-width:480px}
-  .hint{color:#6a5e4e;font-size:13px;margin-top:24px;max-width:520px}
-  a{color:#d4c4a8}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:#1a1612;color:#d4c4a8;
+            font-family:-apple-system,"PingFang SC","Songti SC",serif;
+            line-height:1.7;min-height:100vh;
+            padding-top:env(safe-area-inset-top);
+            padding-bottom:env(safe-area-inset-bottom)}
+  .wrap{max-width:560px;margin:0 auto;padding:48px 24px 80px;text-align:center}
+  h1{font-size:56px;font-weight:200;letter-spacing:16px;margin:32px 0 8px;
+     padding-left:16px}
+  .sub{color:#8a7e6e;letter-spacing:4px;margin:0 0 56px;font-size:14px}
+  .ch{background:#2a2520;border-radius:16px;padding:28px 24px;margin:0 0 20px;
+      text-align:left;border:1px solid #3a3530}
+  .ch-num{color:#8a7e6e;font-size:13px;letter-spacing:3px;margin-bottom:8px}
+  .ch-title{font-size:22px;font-weight:300;letter-spacing:4px;margin:0 0 18px;color:#e8d8b8}
+  .ch-text{color:#a89e8e;font-size:15px;line-height:1.9;margin:0 0 24px;
+           font-family:"Songti SC","STSong",serif}
+  audio{width:100%;margin:8px 0 4px;outline:none}
+  audio::-webkit-media-controls-panel{background:#1a1612}
+  .meta{color:#6a5e4e;font-size:12px;letter-spacing:1px;margin-top:8px}
+  .footer{color:#5a4e3e;font-size:11px;margin-top:60px;letter-spacing:2px;line-height:2}
+  .hint{color:#8a7e6e;font-size:13px;margin:24px 0;letter-spacing:1px}
+  @media (prefers-color-scheme:light){
+    html,body{background:#1a1612;color:#d4c4a8}
+  }
 </style>
 </head>
 <body>
-  <h1>观妙</h1>
-  <p class="sub">道德经冥想</p>
-  <div class="feed">RSS: https://genie-j.github.io/guanmiao-podcast/feed.xml</div>
-  <p class="hint">在「小宇宙 / 苹果播客 / Castro / Overcast」中通过 URL 添加节目,粘贴上方链接即可订阅。</p>
+  <div class="wrap">
+    <h1>观妙</h1>
+    <p class="sub">道德经冥想</p>
+
+    <div class="ch">
+      <div class="ch-num">第 一 章</div>
+      <div class="ch-title">道 可 道</div>
+      <div class="ch-text">道可道,非常道。名可名,非常名。<br>
+      无名天地之始;有名万物之母。<br>
+      故常无,欲以观其妙;常有,欲以观其徼。<br>
+      此两者,同出而异名,同谓之玄。<br>
+      玄之又玄,众妙之门。</div>
+      <audio controls preload="metadata" src="/episode-01.mp3"></audio>
+      <div class="meta">十五分钟 · 冥想阿星 · 钵音</div>
+    </div>
+
+    <p class="hint">将此页「添加到主屏幕」,如同一枚 app。</p>
+
+    <div class="footer">
+      闭眼,听见。<br>
+      © 观妙 2026
+    </div>
+  </div>
+<script>
+// Media Session API: 让锁屏 / AirPods / CarPlay 显示节目信息
+if ('mediaSession' in navigator) {
+  document.querySelectorAll('audio').forEach(a => {
+    a.addEventListener('play', () => {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: '第一章 · 道可道',
+        artist: '观妙',
+        album: '道德经冥想',
+        artwork: [{ src: '/cover.png', sizes: '1400x1400', type: 'image/png' }]
+      });
+    });
+  });
+}
+</script>
 </body>
 </html>
