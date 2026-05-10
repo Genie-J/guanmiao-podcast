@@ -19,6 +19,7 @@
   html,body{margin:0;padding:0;background:#1a1612;color:#d4c4a8;
             font-family:-apple-system,"PingFang SC",sans-serif;line-height:1.7;min-height:100vh;overflow-x:hidden}
   body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+  button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 
   .view{display:none;min-height:100vh;flex-direction:column}
   .view.active{display:flex}
@@ -42,9 +43,11 @@
   .play-btn{width:96px;height:96px;border-radius:50%;background:transparent;
             border:1px solid #6a5e4e;color:#d4c4a8;font-size:32px;
             display:flex;align-items:center;justify-content:center;
-            margin:0 auto 16px;cursor:pointer;transition:all 0.3s}
+            margin:0 auto 16px;cursor:pointer;transition:all 0.3s;position:relative}
   .play-btn:active{background:#2a2520;transform:scale(0.96)}
-  .play-btn .triangle{margin-left:6px}
+  .play-btn::before{content:"";width:0;height:0;margin-left:6px;
+                    border-top:15px solid transparent;border-bottom:15px solid transparent;
+                    border-left:22px solid #d4c4a8}
   .duration{color:#6a5e4e;font-size:12px;letter-spacing:4px;margin-top:12px}
   .more-link{position:fixed;bottom:48px;right:32px;color:#5a4e3e;background:transparent;
              border:none;font-size:24px;cursor:pointer;letter-spacing:4px;padding:12px}
@@ -60,9 +63,24 @@
   .playing-controls{position:fixed;bottom:80px;left:0;right:0;display:flex;
                     justify-content:center;gap:48px}
   .ctrl-btn{width:64px;height:64px;border-radius:50%;background:transparent;
-            border:1px solid #6a5e4e;color:#d4c4a8;font-size:22px;
-            display:flex;align-items:center;justify-content:center;cursor:pointer}
+            border:1px solid #6a5e4e;padding:0;
+            display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+            position:relative;-webkit-appearance:none;appearance:none;
+            font-size:0;line-height:0;color:transparent}
   .ctrl-btn:active{background:#2a2520}
+  .icon{width:64px;height:64px;position:absolute;inset:0;
+        display:flex;align-items:center;justify-content:center;pointer-events:none}
+  .icon-pause{gap:8px}
+  .icon-pause span{width:5px;height:22px;border-radius:2px;background:#d4c4a8;display:block}
+  .icon-play span{width:0;height:0;margin-left:4px;display:block;
+                  border-top:10px solid transparent;border-bottom:10px solid transparent;
+                  border-left:16px solid #d4c4a8}
+  .icon-close span{width:22px;height:2px;border-radius:1px;background:#d4c4a8;
+                   position:absolute;left:21px;top:31px;display:block}
+  .icon-close span:first-child{transform:rotate(45deg)}
+  .icon-close span:last-child{transform:rotate(-45deg)}
+  #play-toggle[data-state="pause"] .icon-play{display:none}
+  #play-toggle[data-state="play"] .icon-pause{display:none}
   .breathing{position:fixed;bottom:200px;left:50%;transform:translateX(-50%);
              width:8px;height:8px;border-radius:50%;background:#6a5e4e;
              animation:breathe 6s ease-in-out infinite}
@@ -116,11 +134,7 @@
     <div class="ch-num" id="home-num">第 一 章</div>
     <div class="ch-title" id="home-title">道  可  道</div>
     <div class="ch-text" id="home-text"></div>
-    <button class="play-btn" onclick="goPlay()" aria-label="播放">
-      <svg width="28" height="32" viewBox="0 0 28 32" fill="none" stroke="none">
-        <path d="M4 2 L26 16 L4 30 Z" fill="#d4c4a8"/>
-      </svg>
-    </button>
+    <button class="play-btn" onclick="goPlay()" aria-label="播放"></button>
     <div class="duration">十 五 分 钟</div>
   </div>
   <button class="more-link" onclick="show('list')">···</button>
@@ -134,17 +148,12 @@
   <div class="playing-text" id="play-text"></div>
   <div class="breathing"></div>
   <div class="playing-controls">
-    <button class="ctrl-btn" onclick="togglePlay()" id="play-toggle" aria-label="暂停或继续">
-      <svg id="toggle-icon" width="20" height="24" viewBox="0 0 20 24" fill="#d4c4a8">
-        <rect x="3" y="2" width="5" height="20" rx="1"/>
-        <rect x="12" y="2" width="5" height="20" rx="1"/>
-      </svg>
+    <button class="ctrl-btn" type="button" id="play-toggle" data-state="pause" aria-label="暂停" onclick="togglePlay()">
+      <span class="icon icon-pause" aria-hidden="true"><span></span><span></span></span>
+      <span class="icon icon-play" aria-hidden="true"><span></span></span>
     </button>
-    <button class="ctrl-btn" onclick="show('home');stopAudio()" aria-label="关闭">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#d4c4a8" stroke-width="2" stroke-linecap="round">
-        <line x1="4" y1="4" x2="16" y2="16"/>
-        <line x1="16" y1="4" x2="4" y2="16"/>
-      </svg>
+    <button class="ctrl-btn" type="button" aria-label="关闭" onclick="show('home');stopAudio()">
+      <span class="icon icon-close" aria-hidden="true"><span></span><span></span></span>
     </button>
   </div>
 </div>
@@ -279,7 +288,6 @@ function goPlay() {
     a.currentTime = state.lastPauseAt;
   }
   a.play().catch(() => {});
-  document.getElementById('play-toggle').textContent = '⏸';
   if ('mediaSession' in navigator) {
     const ch = chapters.find(c => c.n === currentCh);
     navigator.mediaSession.metadata = new MediaMetadata({
@@ -302,15 +310,15 @@ function stopAudio() {
 }
 function togglePlay() {
   const a = document.getElementById('audio');
-  const icon = document.getElementById('toggle-icon');
+  const btn = document.getElementById('play-toggle');
   if (a.paused) {
     a.play();
-    // 暂停 icon (两根竖)
-    icon.innerHTML = '<rect x="3" y="2" width="5" height="20" rx="1"/><rect x="12" y="2" width="5" height="20" rx="1"/>';
+    btn.dataset.state = 'pause';
+    btn.setAttribute('aria-label', '暂停');
   } else {
     a.pause();
-    // 播放 icon (三角)
-    icon.innerHTML = '<path d="M3 2 L18 12 L3 22 Z"/>';
+    btn.dataset.state = 'play';
+    btn.setAttribute('aria-label', '播放');
   }
 }
 function pickChapter(n) {
